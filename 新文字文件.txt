@@ -1,0 +1,134 @@
+int SBP = 51;//更改變化速度
+int BP = 2;
+     
+int LED4 = 4;
+int LED5 = 5;    
+int LED6 = 6;
+int LED7 = 7;
+int LED8 = 8;
+int LED9 = 9;
+int LED10 = 10;
+int LED11 = 11; 
+  
+int longPress = 1000;   
+
+// 變數宣告
+int ledState = HIGH;         
+int BS;        
+int LBS = LOW;   
+
+int B = 0;     // LED 亮度變數
+int C = 255;
+int F = 10;    // LED 亮度增減的數值
+
+unsigned long lastDebounceTime = 0; 
+unsigned long debounceDelay = 20; 
+
+void setup() {
+  pinMode(SBP, INPUT);
+  pinMode(BP, INPUT);
+
+  pinMode(LED4, OUTPUT);
+  pinMode(LED5, OUTPUT);
+  pinMode(LED6, OUTPUT);
+  pinMode(LED7, OUTPUT);
+  pinMode(LED8, OUTPUT);
+  pinMode(LED9, OUTPUT);
+}
+
+void loop() {
+
+   if (SBP==LOW){
+    delay(20);
+    F=F+1;
+    Serial.println(F);
+  }
+
+  int reading = digitalRead(BP);
+  
+  if (reading != LBS) {
+    
+     lastDebounceTime = millis();
+  }
+  
+  
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading != BS) {  
+      BS = reading;
+     
+      if (BS==LOW) ChangeBrightness();
+    }
+    else {  
+        
+        if ((millis() - lastDebounceTime) > longPress) {  
+         
+            if (BS==LOW) ChangeBrightness();     
+        }
+      }
+    }
+  LBS = reading;  // 儲存按鍵值
+}  pinMode(LED10, OUTPUT);
+  pinMode(LED11, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+
+   if (SBP==LOW){
+    delay(20);
+    F=F+1
+    Serial.println(F);
+  }
+
+  int reading = digitalRead(BP);
+  
+  if (reading != LBS) {
+    
+     lastDebounceTime = millis();
+  }
+  
+  
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading != BS) {  
+      BS = reading;
+     
+      if (BS==LOW) ChangeBrightness();
+    }
+    else {  
+        
+        if ((millis() - lastDebounceTime) > longPress) {  
+         
+            if (BS==LOW) ChangeBrightness();     
+        }
+      }
+    }
+  LBS = reading;  // 儲存按鍵值
+}
+
+// 改變 LED 亮度的副程式
+void ChangeBrightness(void) {
+    C = C+F;
+    B = B + F;  
+    // 進行邊界值的限制
+    if (B>255) B=255;
+    if (C>255) C=255;
+    if (B<0) B=0;
+    if (C<0) C=0;
+    if (B == 0 || B == 255) F = -F;
+    if (C == 0 || C == 255) F = -F;
+    analogWrite(LED4, B);
+    analogWrite(LED5, C);
+    analogWrite(LED6, B);
+    analogWrite(LED7, C);
+    analogWrite(LED8, B);
+    analogWrite(LED9, C);
+    analogWrite(LED10, B);
+    analogWrite(LED11, C);
+          
+            
+   
+    Serial.println(B);
+      
+    delay(50);
+      
+}
